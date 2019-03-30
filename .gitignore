@@ -1,1 +1,5 @@
-**/snapshots
+# Files
+.DS_Store
+
+# Global Directories
+**/snapshot
