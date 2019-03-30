@@ -1,0 +1,30 @@
+# Include your customized HAL commands here
+# The commands in this file are run after the AXIS GUI (including PyVCP panel) starts
+
+sets spindle-at-speed true
+
+net remote-o100 halui.mdi-command-00 <= pyvcp.o100
+net remote-o101 halui.mdi-command-01 <= pyvcp.o101 
+net remote-o102 halui.mdi-command-02 <= pyvcp.o102 
+net remote-o103 halui.mdi-command-03 <= pyvcp.o103 
+net remote-o104 halui.mdi-command-04 <= pyvcp.o104 
+ 
+
+# connect the X PyVCP buttons
+net my-jogxminus halui.jog.0.minus <= pyvcp.x-minus
+net my-jogxplus halui.jog.0.plus <= pyvcp.x-plus
+
+# connect the Y PyVCP buttons
+net my-jogyminus halui.jog.1.minus <= pyvcp.y-minus
+net my-jogyplus halui.jog.1.plus <= pyvcp.y-plus
+
+# connect the Z PyVCP buttons
+net my-jogzminus halui.jog.2.minus <= pyvcp.z-minus
+net my-jogzplus halui.jog.2.plus <= pyvcp.z-plus
+
+# connect the A PyVCP buttons
+net my-jogaminus halui.jog.3.minus <= pyvcp.a-minus
+net my-jogaplus halui.jog.3.plus <= pyvcp.a-plus
+
+# connect the PyVCP jog speed slider
+  net my-jogspeed halui.jog-speed <= pyvcp.jog-speed-f

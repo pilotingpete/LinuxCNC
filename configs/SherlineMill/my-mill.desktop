@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Terminal=false
+Name=launch mySherline
+Exec=linuxcnc /home/pete/linuxcnc/configs/SherlineMill/SherlineMill.ini
+Type=Application
+Comment=Desktop Launcher for LinuxCNC config made by Stepconf
+Icon=/usr/share/linuxcnc/linuxcncicon.png
+GenericName=

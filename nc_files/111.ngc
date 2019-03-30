@@ -1,0 +1,28 @@
+o100 sub
+
+( Set current Z position to 0 so that we will always be moving down )
+G10 L20 P0 Z0.0
+
+( quickly probe down to touch off plate )
+G38.2 Z-3.0 F15
+
+( switch to relative coordinates )
+G91
+
+( rapid up 0.1 )
+G0 Z0.05
+
+( probe slowly to get a more accurate zero )
+G38.2 Z-0.2 f0.5
+
+( set Z0.0 to be 0.75 above work surface - this is due to the touchoff plate thickeness )
+G10 L20 P0 Z0.75
+
+( switch back to absolute coordinates )
+G90
+
+( rapid to Z1.0 - probe tip is now 1" above work surface )
+G0 Z1.0
+
+o100 endsub
+

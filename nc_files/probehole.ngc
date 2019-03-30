@@ -1,0 +1,224 @@
+o<probehole> sub
+G90	( absolute coordinates )
+G20	( imperial measurements )
+G54	( coordinate system P1 in use )
+G91	( switch to relative coordinates )
+
+G10 L2 P1 x0 y0 R0
+
+
+G38.2 X1.000 Y1.000 F10		( probe towards quadrant 1 quickly )
+
+G00 X-0.030 Y-0.030 		( rapid back from the probed surface a bit )
+
+G38.2 X0.500 Y0.500 F0.5	( probe towards quadrant 1 slowly )
+
+#<point1x> = #5061 		( save the first point X value )
+#<point1y> = #5062		( save the first point Y value )
+
+G00 X-0.030			( rapid away from probed surface towards next surface )
+
+
+( DEBUG,X1: #<point1x> Y1: #<point1y> )
+
+
+
+G38.2 X-0.500 F10	( probe towards next point quickly )
+
+G00 X0.050 		( rapid back from the probed surface a bit )
+
+G38.2 X-0.500 F0.5	( probe towards next point slowly )
+
+#<point2x> = #5061 	( save the second point X value )
+#<point2y> = #5062	( save the second point Y value )
+
+G00 X0.050		( rapid away from probed surface towards next surface )
+
+( DEBUG,X2: #<point2x> Y2: #<point2y> )
+
+
+
+
+
+G38.2 Y-1.000 F10	( probe towards next point quickly )
+
+G00 Y0.050 		( rapid back from the probed surface a bit )
+
+G38.2 Y-0.500 F0.5	( probe towards next point slowly )
+
+#<point3x> = #5061 	( save the third point X value )
+#<point3y> = #5062	( save the third point Y value )
+
+G00 Y0.050 		( rapid back from the probed surface a bit )
+
+( DEBUG,X3: #<point3x> Y3: #<point3y> )
+
+
+
+
+
+#<temp1> = [ #<point2y> - #<point1y> ]
+#<temp2> = [ #<point2x> - #<point1x> ]
+#<firstlineslope> = [ #<temp1> / #<temp2> ]
+
+( DEBUG, M1: #<firstlineslope> )
+
+#<temp1> = [ #<point3y> - #<point2y> ]
+#<temp2> = [ #<point3x> - #<point2x> ]
+#<secondlineslope> = [ #<temp1> / #<temp2> ]
+
+( DEBUG, M2: #<secondlineslope> )
+
+( calculate the center point )
+
+#<temp1> = [ #<firstlineslope> * #<secondlineslope> ]
+#<temp2> = [ #<point1y> - #<point3y> ]
+#<temp3> = [ #<temp1> * #<temp2> ]						()
+#<temp4> = [ #<point1x> + #<point2x> ]
+#<temp5> = [ #<secondlineslope> * #<temp4> ]			()
+#<temp6> = [ #<point2x> + #<point3x> ]
+#<temp7> = [ #<firstlineslope> * #<temp6> ]				()
+#<temp8> = [ #<temp3> + #<temp5> - #<temp7> ]
+#<temp9> = [ #<secondlineslope> - #<firstlineslope> ]
+#<temp10> = [ 2 * #<temp9> ]								()
+
+
+#<xcenter> = [ #<temp8> / #<temp10> ]
+( DEBUG,X-Center: #<xcenter> )
+
+
+#<temp1> = [ -1 * 1 / #<firstlineslope> ]
+#<temp2> = [ #<point1x> + #<point2x> ]
+#<temp3> = [ #<temp2> / 2 ]	
+#<temp4> = [ #<xcenter> - #<temp3> ]
+#<temp5> = [ #<temp1> * #<temp4> ]	()
+#<temp6> = [ #<point1y> + #<point2y> ]
+#<temp7> = [ #<temp6> / 2 ]	
+ 
+#<ycenter> = [ #<temp5> + #<temp7> ]
+( DEBUG, Y-Center: #<ycenter> )
+
+G90	( switch back to absolute coordinates )
+G01 X#<xcenter> Y#<ycenter> F60
+G10 L2 P1 X#<xcenter> Y#<ycenter>
+
+
+G01 Z0.350 f10
+g01 x10.000 y0.000 f600
+
+G0 Z-0.040 f10
+G91	( switch to relative coordinates )
+
+( probe the next hole )
+
+G38.2 X0.500 Y0.500 F10		( probe towards quadrant 1 quickly )
+
+G00 X-0.030 Y-0.030 		( rapid back from the probed surface a bit )
+
+G38.2 X0.500 Y0.500 F0.5	( probe towards quadrant 1 slowly )
+
+#<point1x> = #5061 		( save the first point X value )
+#<point1y> = #5062		( save the first point Y value )
+
+G00 X-0.030			( rapid away from probed surface towards next surface )
+
+
+( DEBUG,X1: #<point1x> Y1: #<point1y> )
+
+
+
+G38.2 X-0.500 F10	( probe towards next point quickly )
+
+G00 X0.050 		( rapid back from the probed surface a bit )
+
+G38.2 X-0.500 F0.5	( probe towards next point slowly )
+
+#<point2x> = #5061 	( save the second point X value )
+#<point2y> = #5062	( save the second point Y value )
+
+G00 X0.050		( rapid away from probed surface towards next surface )
+
+( DEBUG,X2: #<point2x> Y2: #<point2y> )
+
+
+
+
+
+G38.2 Y-1.000 F10	( probe towards next point quickly )
+
+G00 Y0.050 		( rapid back from the probed surface a bit )
+
+G38.2 Y-0.500 F0.5	( probe towards next point slowly )
+
+#<point3x> = #5061 	( save the third point X value )
+#<point3y> = #5062	( save the third point Y value )
+
+G00 Y0.050 		( rapid back from the probed surface a bit )
+
+( DEBUG,X3: #<point3x> Y3: #<point3y> )
+
+
+G90	( switch back to absolute coordinates )
+
+
+#<temp1> = [ #<point2y> - #<point1y> ]
+#<temp2> = [ #<point2x> - #<point1x> ]
+#<firstlineslope> = [ #<temp1> / #<temp2> ]
+
+( DEBUG, M1: #<firstlineslope> )
+
+#<temp1> = [ #<point3y> - #<point2y> ]
+#<temp2> = [ #<point3x> - #<point2x> ]
+#<secondlineslope> = [ #<temp1> / #<temp2> ]
+
+( DEBUG, M2: #<secondlineslope> )
+
+( calculate the center point )
+
+#<temp1> = [ #<firstlineslope> * #<secondlineslope> ]
+#<temp2> = [ #<point1y> - #<point3y> ]
+#<temp3> = [ #<temp1> * #<temp2> ]						()
+#<temp4> = [ #<point1x> + #<point2x> ]
+#<temp5> = [ #<secondlineslope> * #<temp4> ]			()
+#<temp6> = [ #<point2x> + #<point3x> ]
+#<temp7> = [ #<firstlineslope> * #<temp6> ]				()
+#<temp8> = [ #<temp3> + #<temp5> - #<temp7> ]
+#<temp9> = [ #<secondlineslope> - #<firstlineslope> ]
+#<temp10> = [ 2 * #<temp9> ]								()
+
+
+#<xcenter> = [ #<temp8> / #<temp10> ]
+( DEBUG,X-Center: #<xcenter> )
+
+
+#<temp1> = [ -1 * 1 / #<firstlineslope> ]
+#<temp2> = [ #<point1x> + #<point2x> ]
+#<temp3> = [ #<temp2> / 2 ]	
+#<temp4> = [ #<xcenter> - #<temp3> ]
+#<temp5> = [ #<temp1> * #<temp4> ]	()
+#<temp6> = [ #<point1y> + #<point2y> ]
+#<temp7> = [ #<temp6> / 2 ]	
+ 
+#<ycenter> = [ #<temp5> + #<temp7> ]
+( DEBUG, Y-Center: #<ycenter> )
+
+G90	( switch back to absolute coordinates )
+G01 X#<xcenter> Y#<ycenter> F60
+
+#<coordsrotate> = ATAN[#<ycenter>]/[#<xcenter>]
+( DEBUG, Rotation: #<coordsrotate> )
+G10 L2 P1 R#<coordsrotate>
+
+( go to the PCB {0, 0} )
+
+G01 Z0.250 f10
+G01 X5.000 Y0.500 f600
+
+( set this new origin )
+G10 L2 P1 X0.000 Y0.000
+G10 L2 P0 X0.000 Y0.000
+
+
+o<probehole> endsub
+
+

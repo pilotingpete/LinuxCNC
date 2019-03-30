@@ -1,0 +1,25 @@
+
+G90	( absolute coordinates )
+G20	( imperial measurements )
+G54	( coordinate system P1 in use )
+
+
+G10 L2 P2 x-1 y1	( set G55 to be 2" to the right of g54)
+
+g01 x5 y1 f600
+
+G55
+
+g01 x5 y1 f600
+
+(DEBUG, you're here)
+
+m0
+
+g54
+
+g01 x5 y1 f600
+
+
+m2
+

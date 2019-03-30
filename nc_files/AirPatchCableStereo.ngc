@@ -1,0 +1,329 @@
+(~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Description ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~)
+( this program is intended to biuld a mono AIR Patch Cable )
+( this program assumes that the origin is set to board 0,0 )
+( 2014.05.11 )
+( Pete Mills )
+( Slot 1, R1, should have 160k resistors )
+( slot 2, R3, should have 1k6 resistors )
+
+(~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Description ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~)
+
+
+
+
+
+(~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ General Vars ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~)
+#<safeZ> = 0.250	( Safe Z )
+#<pcbZ> = 0.062		( PCB thickness )	
+#<needleDia> = 0.028 	( diameter of the drag needle )
+#<tapeHoleDia> = 0.059	( diameter of the feed hole in the tape )
+#<temp> = [ #<tapeHoleDia> - #<needleDia> ]
+#<radDiff> = [ #<temp> / 1 ]	( radial difference in the drag hole and needle )
+#<dragHolex> = 0.1378		( X location of the drag hole relative to the part position )
+#<dragHoley> = 0.0787		( Y location of the drag hole relative to the part position )
+#<feedrate> = 600	( main feedrate )
+(~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ General Vars ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~)
+
+
+
+
+
+(~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Slot 1 Vars ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~)
+#<slot1Partx> = -0.560		( X position of the part to pick up )
+#<slot1Party> = 0.330		( Y position of the part to pick up )
+#<slot1Destx> = 0.190		( x position of the part destination )
+#<slot1Desty> = 0.070		( Y position of the part destination )
+#<slot1DestA> = 16		( rotation of part to be placed )
+#<component1z> = 0.020		( component Z height - thickness )
+#<drop1z> = 0.005		( Z height above PCB where the vacuum should let go of the part )
+#<slot1DragZ> = 0.020		( depth for going thru the tape hole )
+#<slot1PickupZ> = 0.026		( depth for picking up a part )
+(~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Slot 1 Vars ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~)
+
+
+
+
+(~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Slot 2 Vars ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~)
+#<slot2Partx> = -0.959		( X position of the part to pick up )
+#<slot2Party> = 0.330		( Y position of the part to pick up )
+#<slot2Destx> = 0.190		( x position of the part destination )
+#<slot2Desty> = 0.345		( Y position of the part destination )
+#<slot2DestA> = 16		( rotation of part to be placed )
+#<component2z> = 0.020		( component Z height - thickness )
+#<drop2z> = 0.005		( Z height above PCB where the vacuum should let go of the part )
+#<slot2DragZ> = 0.020		( depth for going thru the tape hole )
+#<slot2PickupZ> = 0.026		( depth for picking up a part )
+(~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Slot 2 Vars ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~)
+
+
+
+
+
+(~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Slot 5 Vars ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~)
+#<slot5Partx> = -2.363		( X position of the part to pick up )
+#<slot5Party> = 0.330		( Y position of the part to pick up )
+#<slot5Destx> = 0.150		( x position of the part destination )
+#<slot5Desty> = 0.445		( Y position of the part destination )
+#<slot5DestA> = 0		( rotation of part to be placed )
+#<component5z> = 0.040		( component Z height - thickness )
+#<drop5z> = 0.005		( Z height above PCB where the vacuum should let go of the part )
+#<slot5DragZ> = -0.005		( depth for going thru the tape hole )
+#<slot5PickupZ> = 0.003		( depth for picking up a part )
+(~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Slot 5 Vars ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~)
+
+
+G90	( absolute coordinates )
+G20	( imperial measurements )
+G54	( coordinate system P1 in use )
+
+
+
+F #<feedrate>  	( Set Feed Rate )
+
+G00 Z #<safeZ> 	( rapid to positive Z )
+
+(~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ PnP R1 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~)
+
+G01 X #<slot1Partx> y #<slot1Party>	( go to slot 1 part position 1 )
+
+( skip the part advance for this component as one should be present at start )
+
+G01 Z #<slot1PickupZ>	( feed needle down to part surface )
+
+M64 P0			( DO 0 ON - vacuum pump - to pick part up )
+
+G04 P0.100		( dwell seconds )
+
+G01 Z #<safeZ>		( Z up to prepare to move part )
+
+G01 X #<slot1Destx> Y #<slot1Desty>	( go to the part destination )
+
+F 6000  ( Set Feed Rate faster temporarily )
+
+G91	( relative coordinates )
+
+G01 A #<slot1DestA>	( rotate the part to the correct orientation )
+
+G90	( absolute coordinates )
+
+F #<feedrate>  		( Set Feed back )
+
+#<drop1z> = [ #<pcbZ> + #<component1z> ]
+
+G01 Z #<drop1z>
+
+M65 P0	( DO 0 OFF - vacuum needle )
+
+G04 P0.100		( dwell seconds )
+
+G00 Z #<safeZ>
+
+F 6000  ( Set Feed Rate faster temporarily )
+
+G91	( relative coordinates )
+
+G01 A -#<slot1DestA>	( rotate the needle back to the correct orientation )
+
+G90	( absolute coordinates )
+
+(~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ PnP R1 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~)
+
+
+
+
+
+(~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ PnP R3 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~)
+
+G01 X #<slot2Partx> y #<slot2Party>	( go to slot 2 part position 1 )
+
+( skip the part advance for this component as one should be present at start )
+
+G01 Z #<slot2PickupZ>	( feed needle down to part surface )
+
+M64 P0			( DO 0 ON - vacuum pump - to pick part up )
+
+G04 P0.100		( dwell seconds )
+
+G01 Z #<safeZ>		( Z up to prepare to move part )
+
+G01 X #<slot2Destx> Y #<slot2Desty>	( go to the part destination )
+
+F 6000  ( Set Feed Rate faster temporarily )
+
+G91	( relative coordinates )
+
+G01 A #<slot2DestA>	( rotate the part to the correct orientation )
+
+G90	( absolute coordinates )
+
+F #<feedrate>  		( Set Feed back )
+
+#<drop2z> = [ #<pcbZ> + #<component2z> ]
+
+G01 Z #<drop2z>
+
+M65 P0	( DO 0 OFF - vacuum needle )
+
+G04 P0.100		( dwell seconds )
+
+G00 Z #<safeZ>
+
+F 6000  ( Set Feed Rate faster temporarily )
+
+G91	( relative coordinates )
+
+G01 A -#<slot2DestA>	( rotate the needle back to the correct orientation )
+
+G90	( absolute coordinates )
+
+(~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ PnP R3 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~)
+
+
+
+
+
+(~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ PnP C1 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~)
+
+G01 X #<slot5Partx> y #<slot5Party>	( go to slot 5 part position 1 )
+
+( skip the part advance for this component as one should be present at start )
+
+G01 Z #<slot5PickupZ>	( feed needle down to part surface )
+
+M64 P0			( DO 0 ON - vacuum pump - to pick part up )
+
+G04 P0.100		( dwell seconds )
+
+G01 Z #<safeZ>		( Z up to prepare to move part )
+
+G01 X #<slot5Destx> Y #<slot5Desty>	( go to the part destination )
+
+F 6000  ( Set Feed Rate faster temporarily )
+
+G91	( relative coordinates )
+
+G01 A #<slot5DestA>	( rotate the part to the correct orientation )
+
+G90	( absolute coordinates )
+
+F #<feedrate>  		( Set Feed back )
+
+#<drop5z> = [ #<pcbZ> + #<component5z> ]
+
+G01 Z #<drop5z>
+
+M65 P0	( DO 0 OFF - vacuum needle )
+
+G04 P0.100		( dwell seconds )
+
+G00 Z #<safeZ>
+
+F 6000  ( Set Feed Rate faster temporarily )
+
+G91	( relative coordinates )
+
+G01 A -#<slot5DestA>	( rotate the needle back to the correct orientation )
+
+G90	( absolute coordinates )
+
+(~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ PnP C1 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~)
+
+
+
+
+(~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Feed Slot 1 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~)
+
+G01 X #<slot1Partx> y #<slot1Party>	( go to slot 1 part position 1 )
+
+G91	( relative coordinates )
+
+G00 X #<dragHolex> Y #<dragHoley>
+
+G90	( absolute coordinates )
+
+G01 Z #<slot1DragZ>	( go down into the drag hole )
+
+G91	( relative coordinates )
+
+G01 F50 Y -#<dragHoley>	( drag it two slots to present a new component )
+
+G01 F50 Y -#<dragHoley>
+
+G01 F50 Y -#<radDiff>
+
+G01 F50 Y #<radDiff>	( move back into the center of the drag hole )
+
+G90	( absolute coordinates )
+
+G00 Z #<safeZ>
+
+(~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Feed Slot 1 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~)
+
+
+
+
+
+(~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Feed Slot 2 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~)
+
+G01 X #<slot2Partx> y #<slot2Party>	( go to slot 1 part position 1 )
+
+G91	( relative coordinates )
+
+G00 X #<dragHolex> Y #<dragHoley>
+
+G90	( absolute coordinates )
+
+G01 Z #<slot2DragZ>	( go down into the drag hole )
+
+G91	( relative coordinates )
+
+G01 F50 Y -#<dragHoley>	( drag it two slots to present a new component )
+
+G01 F50 Y -#<dragHoley>
+
+G01 F50 Y -#<radDiff>
+
+G01 F50 Y #<radDiff>	( move back into the center of the drag hole )
+
+G90	( absolute coordinates )
+
+G00 Z #<safeZ>
+
+(~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Feed Slot 2 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~)
+
+
+
+
+
+(~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Feed Slot 5 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~)
+
+G01 X #<slot5Partx> y #<slot5Party>	( go to slot 1 part position 1 )
+
+G91	( relative coordinates )
+
+G00 X #<dragHolex> Y #<dragHoley>
+
+G90	( absolute coordinates )
+
+G01 Z #<slot5DragZ>	( go down into the drag hole )
+
+G91	( relative coordinates )
+
+G01 F50 Y -#<dragHoley>	( drag it two slots to present a new component )
+
+G01 F50 Y -#<dragHoley>
+
+G01 F50 Y -#<radDiff>
+
+G01 F50 Y #<radDiff>	( move back into the center of the drag hole )
+
+G90	( absolute coordinates )
+
+G00 Z #<safeZ>
+
+(~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Feed Slot 5 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~)
+
+G00 X -4.000 Y 0.000
+
+M30
+

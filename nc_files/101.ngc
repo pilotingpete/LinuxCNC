@@ -1,0 +1,7 @@
+o101 sub
+
+( Set current Y position to 0 )
+G10 L20 P0 Y0.0
+
+o101 endsub
+

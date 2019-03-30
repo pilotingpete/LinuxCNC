@@ -1,0 +1,11 @@
+
+G90	( absolute coordinates )
+G20	( imperial measurements )
+G54	( coordinate system P1 in use )
+
+
+g02 X2Y0 I0J1 f10
+
+
+m2
+

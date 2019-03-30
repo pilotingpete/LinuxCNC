@@ -1,0 +1,8 @@
+o200 sub
+
+M64 P1	( DO 1 ON )
+G04 P.6	( dwell seconds )	
+M65 P1	( DO 1 OFF )
+
+o200 endsub
+

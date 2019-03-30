@@ -1,0 +1,23 @@
+
+G91	( relative coordinates )
+G20	( imperial measurements )
+G54	( coordinate system P1 in use )
+
+
+g01 y-0.1575 f30
+g01 z0.05 f30
+g01 y0.1575 f30
+g01 z-0.05 f30
+
+g01 y-0.1575 f30
+g01 z0.05 f30
+g01 y0.1575 f30
+g01 z-0.05 f30
+
+g01 y-0.1575 f30
+g01 z0.05 f30
+g01 y0.1575 f30
+g01 z-0.05f30
+
+m2
+

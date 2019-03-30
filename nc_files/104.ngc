@@ -1,0 +1,8 @@
+o104 sub
+
+( Set current z position to a height )
+( This is for rolling a dowel under the cutter and on top of the work piece to set "zero" )
+G10 L20 P0 Z3.96
+
+o104 endsub
+
